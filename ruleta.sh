@@ -26,6 +26,9 @@ function helpPanel() {
     echo -e "\n${grayColour}Ejemplo: bash ruleta.sh -m 100 -t martingala -n 100 -d 0 -o results.csv${endColour}"
     echo -e "${grayColour}Paroli conserva tu variante: duplica tras ganar y reinicia tras perder.${endColour}"
     echo -e "${grayColour}Los límites se comprueban después de resolver cada tirada y pueden sobrepasarse.${endColour}"
+    echo -e "\t${purpleColour}-b${endColour} Apuesta inicial para martingala o paroli (desde 1 hasta 1000000000)."
+    echo -e "\t${purpleColour}-s${endColour} Apuesta a: par or impar."
+    echo -e "\t${purpleColour}-l${endColour} Desactiva los límites de apuesta."
 }
 
 function fail() {
@@ -47,6 +50,10 @@ function read_value() {
 }
 
 function read_side() {
+    if [[ -n "$configured_side" ]]; then
+    even_odd=$configured_side
+    return 0
+fi
     while true; do
         read_value even_odd '¿A qué deseas apostar continuamente (par/impar)? -> ' || return 1
         case "$even_odd" in
@@ -57,6 +64,9 @@ function read_side() {
 }
 
 function read_limits() {
+    if ((skip_limits_prompt)); then
+    return 0
+fi
     limits_enabled=0
     while true; do
         read_value answer '¿Deseas poner límites? s/n -> ' || return 1
@@ -205,13 +215,17 @@ function run_progression() {
     local strategy=$1
     local init_bet backup_bet
     prepare_session
+    if [[ -n "$base_bet" ]]; then
+    init_bet=$base_bet
+    else
     while true; do
-        read_value init_bet '¿Cuánto dinero quieres apostar? (euros enteros) -> ' || return 1
+        read_value init_bet 'Initial bet in whole euros -> ' || return 1
         if is_positive_integer "$init_bet" 1000000000 && ((init_bet <= money)); then
             break
         fi
-        fail 'Introduce una apuesta entera positiva, sin ceros iniciales y que no supere tu saldo.'
+        fail 'Enter a positive integer without leading zeros that does not exceed your balance.'
     done
+    fi
     read_side || return 1
     read_limits || return 1
     backup_bet=$init_bet
@@ -292,15 +306,30 @@ function main() {
     local arg OPTIND=1
     money=''
     technique=''
+    base_bet=''
+    configured_side=''
+    skip_limits_prompt=0
     max_spins=1000
     delay=''
     output_file=''
     csv_open=0
     trap ctrl_c INT
-    while getopts ':m:t:n:d:o:h' arg; do
+    while getopts ':m:t:b:s:n:d:o:lh' arg; do
         case "$arg" in
             m) money=$OPTARG ;;
             t) technique=$OPTARG ;;
+            b) base_bet=$OPTARG
+            is_positive_integer "$base_bet" 1000000000 || {
+            fail 'The base bet must be an integer from 1 to 1000000000, without leading zeros.'
+            return 1
+            } ;;
+            s) configured_side=$OPTARG
+            case "$configured_side" in
+            par|impar) ;;
+            *) fail 'La apuesta debe ser par or impar.'
+            return 1 ;;
+            esac ;;
+            l) skip_limits_prompt=1 ;;
             n) max_spins=$OPTARG ;;
             d) delay=$OPTARG ;;
             o) output_file=$OPTARG
@@ -329,6 +358,10 @@ function main() {
         fail 'La pausa debe estar entre 0 y 10 segundos, con hasta tres decimales y punto decimal.'
         return 1
     }
+    if [[ "$technique" == inverseLabouchere && -n "$base_bet" ]]; then
+    fail 'The -b option is only supported for martingala and paroli.'
+    return 1
+fi
     "$technique"
 }
 
