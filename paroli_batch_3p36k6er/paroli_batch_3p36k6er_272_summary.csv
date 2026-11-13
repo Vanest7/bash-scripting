@@ -1,0 +1,2 @@
+session_id,random_seed,strategy,side,initial_balance,final_balance,total_spins,net_profit,stop_reason
+paroli_batch_3p36k6er_272,371,paroli,par,100,61,100,-39,max_spins

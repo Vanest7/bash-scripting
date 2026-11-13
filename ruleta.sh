@@ -259,10 +259,32 @@ function show_summary() {
     if ((csv_open)); then
         exec 3>&-
         csv_open=0
+        write_summary_csv || return 1
 
         printf '%b%s%b\n' \
             "${yellowColour}[+]${endColour} Data saved to: ${blueColour}" \
             "$output_file" "$endColour"
+    fi
+}
+
+function write_summary_csv() {
+    [[ -z "$output_file" ]] && return 0
+
+    local summary_file="${output_file%.csv}_summary.csv"
+
+    if ! (
+        set -C
+        {
+            printf '%s\n' 'session_id,random_seed,strategy,side,initial_balance,final_balance,total_spins,net_profit,stop_reason'
+
+            printf '%s,%s,%s,%s,%d,%d,%d,%d,%s\n' \
+                "$session_id" "$random_seed" "$technique" "$even_odd" \
+                "$initial_money" "$money" "$play_counter" \
+                "$((money - initial_money))" "$stop_reason"
+        } > "$summary_file"
+    ); then
+        fail "Unable to create summary CSV: $summary_file"
+        return 1
     fi
 }
 

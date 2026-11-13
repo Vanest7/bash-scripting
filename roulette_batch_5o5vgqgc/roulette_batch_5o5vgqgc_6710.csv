@@ -1,0 +1,16 @@
+session_id,random_seed,strategy,spin,side,number,bet,balance_before,won,profit,balance_after
+roulette_batch_5o5vgqgc_6710,6809,martingala,1,par,21,1,100,0,-1,99
+roulette_batch_5o5vgqgc_6710,6809,martingala,2,par,23,2,99,0,-2,97
+roulette_batch_5o5vgqgc_6710,6809,martingala,3,par,30,4,97,1,4,101
+roulette_batch_5o5vgqgc_6710,6809,martingala,4,par,32,1,101,1,1,102
+roulette_batch_5o5vgqgc_6710,6809,martingala,5,par,36,1,102,1,1,103
+roulette_batch_5o5vgqgc_6710,6809,martingala,6,par,4,1,103,1,1,104
+roulette_batch_5o5vgqgc_6710,6809,martingala,7,par,36,1,104,1,1,105
+roulette_batch_5o5vgqgc_6710,6809,martingala,8,par,8,1,105,1,1,106
+roulette_batch_5o5vgqgc_6710,6809,martingala,9,par,8,1,106,1,1,107
+roulette_batch_5o5vgqgc_6710,6809,martingala,10,par,7,1,107,0,-1,106
+roulette_batch_5o5vgqgc_6710,6809,martingala,11,par,3,2,106,0,-2,104
+roulette_batch_5o5vgqgc_6710,6809,martingala,12,par,27,4,104,0,-4,100
+roulette_batch_5o5vgqgc_6710,6809,martingala,13,par,21,8,100,0,-8,92
+roulette_batch_5o5vgqgc_6710,6809,martingala,14,par,11,16,92,0,-16,76
+roulette_batch_5o5vgqgc_6710,6809,martingala,15,par,27,32,76,0,-32,44

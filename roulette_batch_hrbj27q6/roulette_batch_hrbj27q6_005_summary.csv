@@ -1,0 +1,2 @@
+session_id,random_seed,strategy,side,initial_balance,final_balance,total_spins,net_profit,stop_reason
+roulette_batch_hrbj27q6_005,104,martingala,par,100,50,30,-50,insufficient_balance

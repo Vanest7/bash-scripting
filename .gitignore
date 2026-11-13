@@ -1,9 +1,15 @@
 # Python virtual environment
 .venv/
 
-# Python cache files
+# Python bytecode and cache
 __pycache__/
 *.py[cod]
 
 # Jupyter checkpoints
 .ipynb_checkpoints/
+
+# Local environment variables
+.env
+
+# Generated simulation outputs
+/outputs/
